@@ -3,13 +3,13 @@ import 'package:uuid/uuid.dart';
 
 class CategoryService {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String ref = 'categories';
+  String ref = 'categorias';
 
   void createCategory(String name) {
     var id = Uuid();
     String categoryId = id.v1();
 
-    _firestore.collection(ref).doc(categoryId).set({'category': name});
+    _firestore.collection(ref).doc(categoryId).set({'categoria': name});
   }
 
   Future<List<DocumentSnapshot>> getCategories() =>
@@ -19,7 +19,7 @@ class CategoryService {
 
   Future<List<DocumentSnapshot>> getSuggestions(String suggestion) => _firestore
           .collection(ref)
-          .where('category', isEqualTo: suggestion)
+          .where('categoria', isEqualTo: suggestion)
           .get()
           .then((snap) {
         return snap.docs;

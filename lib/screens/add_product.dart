@@ -61,7 +61,7 @@ class _AddProductState extends State<AddProduct> {
 
   List<DropdownMenuItem<String>> getCategoriesDropdown() {
     return categories.map((category) {
-      final categoryValue = category['category']?.toString() ??
+      final categoryValue = category['categoria']?.toString() ??
           'Unknown'; // Asegúrate de que el valor es String y maneja nulos
       return DropdownMenuItem<String>(
         child: Text(categoryValue),
@@ -72,7 +72,7 @@ class _AddProductState extends State<AddProduct> {
 
   List<DropdownMenuItem<String>> getBrandsDropdown() {
     return brands.map((brand) {
-      final brandValue = brand['brand']?.toString() ??
+      final brandValue = brand['marca']?.toString() ??
           'Unknown'; // Convierte a String y maneja valores nulos
       return DropdownMenuItem<String>(
         child: Text(brandValue),
@@ -87,7 +87,7 @@ class _AddProductState extends State<AddProduct> {
       setState(() {
         categories = data;
         categoriesDropDown = getCategoriesDropdown();
-        _currentCategory = categories[0]['category'];
+        _currentCategory = categories[0]['categoria'];
       });
     }
   }
@@ -98,7 +98,7 @@ class _AddProductState extends State<AddProduct> {
       setState(() {
         brands = data;
         brandsDropDown = getBrandsDropdown();
-        _currentBrand = brands[0]['brand'];
+        _currentBrand = brands[0]['marca'];
       });
     }
   }
@@ -196,17 +196,17 @@ class _AddProductState extends State<AddProduct> {
 
           UploadTask task1 = storage
               .ref()
-              .child("products/${getImageFileName(1)}")
+              .child("productos/${getImageFileName(1)}")
               .putFile(_image1!);
 
           UploadTask task2 = storage
               .ref()
-              .child("products/${getImageFileName(2)}")
+              .child("productos/${getImageFileName(2)}")
               .putFile(_image2!);
 
           UploadTask task3 = storage
               .ref()
-              .child("products/${getImageFileName(3)}")
+              .child("productos/${getImageFileName(3)}")
               .putFile(_image3!);
 
           final imageUrl1 = await (await task1).ref.getDownloadURL();
@@ -216,13 +216,13 @@ class _AddProductState extends State<AddProduct> {
           final imageList = [imageUrl1, imageUrl2, imageUrl3];
 
           await _productService.uploadProduct({
-            "name": _productNameController.text,
-            "price": double.parse(_priceController.text),
-            "sizes": selectedSizes,
-            "images": imageList,
-            "quantity": int.parse(_quantityController.text),
-            "brand": _currentBrand,
-            "category": _currentCategory,
+            "nombre": _productNameController.text,
+            "precio": double.parse(_priceController.text),
+            "tallas": selectedSizes,
+            "imagenes": imageList,
+            "cantidad": int.parse(_quantityController.text),
+            "marca": _currentBrand,
+            "categoria": _currentCategory,
           });
 
           _formKey.currentState!.reset();
@@ -334,43 +334,46 @@ class _AddProductState extends State<AddProduct> {
                         },
                       ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Category: ',
-                            style: TextStyle(color: red),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Categoria: ',
+                              style: TextStyle(color: red),
+                            ),
                           ),
-                        ),
-                        DropdownButton<String>(
-                          items: categoriesDropDown,
-                          onChanged: changeSelectedCategory,
-                          value: _currentCategory,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Brand: ',
-                            style: TextStyle(color: red),
+                          DropdownButton<String>(
+                            items: categoriesDropDown,
+                            onChanged: changeSelectedCategory,
+                            value: _currentCategory,
                           ),
-                        ),
-                        DropdownButton<String>(
-                          items: brandsDropDown,
-                          onChanged: changeSelectedBrand,
-                          value: _currentBrand,
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Marca: ',
+                              style: TextStyle(color: red),
+                            ),
+                          ),
+                          DropdownButton<String>(
+                            items: brandsDropDown,
+                            onChanged: changeSelectedBrand,
+                            value: _currentBrand,
+                          ),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: TextFormField(
                         controller: _quantityController,
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(hintText: 'Quantity'),
+                        decoration: InputDecoration(hintText: 'Cantidad'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'You must enter the product quantity';
+                            return 'Hay que introducir la cantidad';
                           }
                           return null;
                         },
@@ -381,16 +384,16 @@ class _AddProductState extends State<AddProduct> {
                       child: TextFormField(
                         controller: _priceController,
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(hintText: 'Price'),
+                        decoration: InputDecoration(hintText: 'Precio'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'You must enter the product price';
+                            return 'ay que introducir el precio';
                           }
                           return null;
                         },
                       ),
                     ),
-                    Text('Available Sizes'),
+                    Text('Tallas disponibles'),
                     SingleChildScrollView(
                       scrollDirection:
                           Axis.horizontal, // Permitir desplazamiento horizontal
@@ -459,7 +462,8 @@ class _AddProductState extends State<AddProduct> {
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.blue)),
-                      child: Text('Add Product'),
+                      child: Text('Añadir producto',
+                          style: TextStyle(color: white)),
                       onPressed: validateAndUpload,
                     ),
                   ],
