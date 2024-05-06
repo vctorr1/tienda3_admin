@@ -240,7 +240,7 @@ class _AdminState extends State<Admin> {
   }
 
   void _categoryAlert() {
-    var alert = new AlertDialog(
+    var alert = AlertDialog(
       content: Form(
         key: _categoryFormKey,
         child: TextFormField(
