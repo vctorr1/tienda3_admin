@@ -5,7 +5,7 @@ class ProductService {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String ref = 'products';
 
-  void uploadProduct(Map<String, dynamic> data) {
+  dynamic uploadProduct(Map<String, dynamic> data) {
     var id = Uuid();
     String productId = id.v1();
     data["id"] = productId;

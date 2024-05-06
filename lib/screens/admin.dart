@@ -39,7 +39,7 @@ class _AdminState extends State<Admin> {
                             ? active
                             : notActive,
                       ),
-                      label: Text('Dashboard'))),
+                      label: Text('Información'))),
               Expanded(
                   child: TextButton.icon(
                       onPressed: () {
@@ -50,7 +50,7 @@ class _AdminState extends State<Admin> {
                         color:
                             _selectedPage == Page.manage ? active : notActive,
                       ),
-                      label: Text('Manage'))),
+                      label: Text('Administrar'))),
             ],
           ),
           elevation: 0.0,
@@ -77,7 +77,7 @@ class _AdminState extends State<Admin> {
                     style: TextStyle(fontSize: 30.0, color: Colors.green)),
               ),
               title: Text(
-                'Revenue',
+                'Recaudación',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 24.0, color: Colors.grey),
               ),
@@ -94,7 +94,7 @@ class _AdminState extends State<Admin> {
                           title: TextButton.icon(
                               onPressed: null,
                               icon: Icon(Icons.people_outline),
-                              label: Text("Users")),
+                              label: Text("Usuarios")),
                           subtitle: Text(
                             '7',
                             textAlign: TextAlign.center,
@@ -109,7 +109,7 @@ class _AdminState extends State<Admin> {
                           title: TextButton.icon(
                               onPressed: null,
                               icon: Icon(Icons.category),
-                              label: Text("Categories")),
+                              label: Text("Categorias")),
                           subtitle: Text(
                             '23',
                             textAlign: TextAlign.center,
@@ -124,7 +124,7 @@ class _AdminState extends State<Admin> {
                           title: TextButton.icon(
                               onPressed: null,
                               icon: Icon(Icons.track_changes),
-                              label: Text("Producs")),
+                              label: Text("Productos")),
                           subtitle: Text(
                             '120',
                             textAlign: TextAlign.center,
@@ -139,7 +139,7 @@ class _AdminState extends State<Admin> {
                           title: TextButton.icon(
                               onPressed: null,
                               icon: Icon(Icons.tag_faces),
-                              label: Text("Sold")),
+                              label: Text("Ventas")),
                           subtitle: Text(
                             '13',
                             textAlign: TextAlign.center,
@@ -154,7 +154,7 @@ class _AdminState extends State<Admin> {
                           title: TextButton.icon(
                               onPressed: null,
                               icon: Icon(Icons.shopping_cart),
-                              label: Text("Orders")),
+                              label: Text("Pedidos")),
                           subtitle: Text(
                             '5',
                             textAlign: TextAlign.center,
@@ -169,7 +169,7 @@ class _AdminState extends State<Admin> {
                           title: TextButton.icon(
                               onPressed: null,
                               icon: Icon(Icons.close),
-                              label: Text("Return")),
+                              label: Text("Devoluciones")),
                           subtitle: Text(
                             '0',
                             textAlign: TextAlign.center,
@@ -188,7 +188,7 @@ class _AdminState extends State<Admin> {
           children: <Widget>[
             ListTile(
               leading: Icon(Icons.add),
-              title: Text("Add product"),
+              title: Text("Añadir producto"),
               onTap: () {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (_) => AddProduct()));
@@ -197,13 +197,13 @@ class _AdminState extends State<Admin> {
             Divider(),
             ListTile(
               leading: Icon(Icons.change_history),
-              title: Text("Products list"),
+              title: Text("Lista de productos"),
               onTap: () {},
             ),
             Divider(),
             ListTile(
               leading: Icon(Icons.add_circle),
-              title: Text("Add category"),
+              title: Text("Añadir categoria"),
               onTap: () {
                 _categoryAlert();
               },
@@ -211,13 +211,13 @@ class _AdminState extends State<Admin> {
             Divider(),
             ListTile(
               leading: Icon(Icons.category),
-              title: Text("Category list"),
+              title: Text("Lista de categorias"),
               onTap: () {},
             ),
             Divider(),
             ListTile(
               leading: Icon(Icons.add_circle_outline),
-              title: Text("Add brand"),
+              title: Text("Añadir marca"),
               onTap: () {
                 _brandAlert();
               },
@@ -225,7 +225,7 @@ class _AdminState extends State<Admin> {
             Divider(),
             ListTile(
               leading: Icon(Icons.library_books),
-              title: Text("brand list"),
+              title: Text("Lista de marcas"),
               onTap: () {
                 _brandService.getBrands();
               },
@@ -247,10 +247,10 @@ class _AdminState extends State<Admin> {
           controller: categoryController,
           validator: (value) {
             if (value!.isEmpty) {
-              return 'category cannot be empty';
+              return 'La categoría no puede estar vacía';
             }
           },
-          decoration: InputDecoration(hintText: "add category"),
+          decoration: InputDecoration(hintText: "Añadir categoria"),
         ),
       ),
       actions: <Widget>[
@@ -262,12 +262,12 @@ class _AdminState extends State<Admin> {
 //          Fluttertoast.showToast(msg: 'category created');
               Navigator.pop(context);
             },
-            child: Text('ADD')),
+            child: Text('AÑADIR')),
         TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('CANCEL')),
+            child: Text('CANCELAR')),
       ],
     );
 
@@ -282,10 +282,10 @@ class _AdminState extends State<Admin> {
           controller: brandController,
           validator: (value) {
             if (value!.isEmpty) {
-              return 'category cannot be empty';
+              return 'La categoría no puede estar vacía';
             }
           },
-          decoration: InputDecoration(hintText: "add brand"),
+          decoration: InputDecoration(hintText: "Añadir marca"),
         ),
       ),
       actions: <Widget>[
@@ -297,12 +297,12 @@ class _AdminState extends State<Admin> {
 //          Fluttertoast.showToast(msg: 'brand added');
               Navigator.pop(context);
             },
-            child: Text('ADD')),
+            child: Text('AÑADIR')),
         TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('CANCEL')),
+            child: Text('CANCELAR')),
       ],
     );
 
