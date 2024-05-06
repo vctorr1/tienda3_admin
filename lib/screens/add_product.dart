@@ -101,23 +101,34 @@ class _AddProductState extends State<AddProduct> {
     }
   }
 
+  bool _isImagePickerActive = false;
+
   void _selectImage(Future<XFile?> pickImage, int imageNumber) async {
-    final pickedImage = await pickImage;
-    if (pickedImage != null) {
-      final File tempImg = File(pickedImage.path);
-      setState(() {
-        switch (imageNumber) {
-          case 1:
-            _image1 = tempImg;
-            break;
-          case 2:
-            _image2 = tempImg;
-            break;
-          case 3:
-            _image3 = tempImg;
-            break;
-        }
-      });
+    try {
+      if (_isImagePickerActive) return;
+
+      _isImagePickerActive = true;
+      final pickedImage = await pickImage;
+      _isImagePickerActive = false;
+
+      if (pickedImage != null) {
+        final File tempImg = File(pickedImage.path);
+        setState(() {
+          switch (imageNumber) {
+            case 1:
+              _image1 = tempImg;
+              break;
+            case 2:
+              _image2 = tempImg;
+              break;
+            case 3:
+              _image3 = tempImg;
+              break;
+          }
+        });
+      }
+    } catch (e) {
+      print("Error picking image: $e");
     }
   }
 
@@ -240,7 +251,7 @@ class _AddProductState extends State<AddProduct> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          "Add Product",
+          "Añadir producto",
           style: TextStyle(color: black),
         ),
       ),
@@ -309,7 +320,8 @@ class _AddProductState extends State<AddProduct> {
                       padding: const EdgeInsets.all(12.0),
                       child: TextFormField(
                         controller: _productNameController,
-                        decoration: InputDecoration(hintText: 'Product name'),
+                        decoration:
+                            InputDecoration(hintText: 'Nombre del producto'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'You must enter the product name';
