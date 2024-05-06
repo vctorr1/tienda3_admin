@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "812210093339",
+    "firebase_url": "https://tienda3-3d9da-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "tienda3-3d9da",
+    "storage_bucket": "tienda3-3d9da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812210093339:android:91a863e54b27e51b4b27be",
+        "android_client_info": {
+          "package_name": "com.example.tienda3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9ms0MFVvXmgMpe3Tq_WVAuWdZKlKhb-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812210093339:android:8db4647030b7c9754b27be",
+        "android_client_info": {
+          "package_name": "com.example.tienda3_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9ms0MFVvXmgMpe3Tq_WVAuWdZKlKhb-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
