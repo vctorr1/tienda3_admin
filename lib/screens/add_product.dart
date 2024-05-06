@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:tienda3_admin/db/product.dart';
@@ -389,58 +391,69 @@ class _AddProductState extends State<AddProduct> {
                       ),
                     ),
                     Text('Available Sizes'),
-                    Row(
-                      children: <Widget>[
-                        for (var size in ['XS', 'S', 'M', 'L', 'XL', 'XXL'])
-                          Row(
-                            children: <Widget>[
-                              Checkbox(
-                                value: selectedSizes.contains(size),
-                                onChanged: (bool? value) {
-                                  if (value == true) {
-                                    selectedSizes.add(size);
-                                  } else {
-                                    selectedSizes.remove(size);
-                                  }
-                                },
-                              ),
-                              Text(size),
-                            ],
-                          ),
-                      ],
+                    SingleChildScrollView(
+                      scrollDirection:
+                          Axis.horizontal, // Permitir desplazamiento horizontal
+                      child: Row(
+                        children: <Widget>[
+                          for (var size in ['XS', 'S', 'M', 'L', 'XL', 'XXL'])
+                            Row(
+                              children: <Widget>[
+                                Checkbox(
+                                  value: selectedSizes.contains(size),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      if (value == true) {
+                                        selectedSizes.add(size);
+                                      } else {
+                                        selectedSizes.remove(size);
+                                      }
+                                    });
+                                  },
+                                ),
+                                Text(size),
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        for (var size in [
-                          '28',
-                          '30',
-                          '32',
-                          '34',
-                          '36',
-                          '38',
-                          '40',
-                          '42',
-                          '44',
-                          '46',
-                          '48',
-                          '50'
-                        ])
-                          Row(
-                            children: <Widget>[
-                              Checkbox(
-                                value: selectedSizes.contains(size),
-                                onChanged: (bool? value) {
-                                  if (value == true) {
-                                    selectedSizes.add(size);
-                                  } else {
-                                    selectedSizes.remove(size);
-                                  }
-                                },
-                              ),
-                              Text(size),
-                            ],
-                          ),
-                      ],
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: <Widget>[
+                          for (var size in [
+                            '28',
+                            '30',
+                            '32',
+                            '34',
+                            '36',
+                            '38',
+                            '40',
+                            '42',
+                            '44',
+                            '46',
+                            '48',
+                            '50'
+                          ])
+                            Row(
+                              children: <Widget>[
+                                Checkbox(
+                                  value: selectedSizes.contains(size),
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      if (value == true) {
+                                        selectedSizes.add(size);
+                                      } else {
+                                        selectedSizes.remove(size);
+                                      }
+                                    });
+                                  },
+                                ),
+                                Text(size),
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
                     TextButton(
                       style: ButtonStyle(
