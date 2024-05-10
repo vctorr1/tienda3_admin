@@ -24,6 +24,7 @@ class _AddProductState extends State<AddProduct> {
   final TextEditingController _productNameController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   List<DocumentSnapshot> brands = [];
   List<DocumentSnapshot> categories = [];
@@ -56,6 +57,7 @@ class _AddProductState extends State<AddProduct> {
     _productNameController.dispose();
     _quantityController.dispose();
     _priceController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -130,7 +132,7 @@ class _AddProductState extends State<AddProduct> {
         });
       }
     } catch (e) {
-      print("Error picking image: $e");
+      print("Error con la imagen: $e");
     }
   }
 
@@ -223,6 +225,7 @@ class _AddProductState extends State<AddProduct> {
             "cantidad": int.parse(_quantityController.text),
             "marca": _currentBrand,
             "categoria": _currentCategory,
+            "descripcion": _descriptionController.text
           });
 
           _formKey.currentState!.reset();
@@ -231,13 +234,13 @@ class _AddProductState extends State<AddProduct> {
           Navigator.pop(context); // Regresar al menú principal
         } else {
           setState(() => isLoading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Select at least one size")));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Selecciona una talla")));
         }
       } else {
         setState(() => isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("All images must be provided")));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Añade más imagenes")));
       }
     }
   }
@@ -374,6 +377,20 @@ class _AddProductState extends State<AddProduct> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Hay que introducir la cantidad';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: TextFormField(
+                        controller: _descriptionController,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(hintText: 'Descripcion'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Hay que introducir la descripcion';
                           }
                           return null;
                         },
