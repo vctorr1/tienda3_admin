@@ -36,7 +36,7 @@ class _BrandListViewState extends State<BrandListView> {
                   leading: Icon(Icons.library_books),
                   title: Text(brandData['marca']),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
                       _showDeleteConfirmationDialog(context, brand.id);
                     },

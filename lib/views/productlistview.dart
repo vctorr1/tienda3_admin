@@ -40,9 +40,9 @@ class _ProductListViewState extends State<ProductListView> {
                       : Icon(Icons.image),
                   title: Text(productData['nombre']),
                   subtitle: Text(
-                      "Marca: ${productData['marca']}\nPrecio: \$${productData['precio']}"),
+                      "Marca: ${productData['marca']}\nPrecio: ${productData['precio'] / 100}€\n Stock: ${productData['cantidad']} unidades"),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
                       _showDeleteConfirmationDialog(context, product.id);
                     },

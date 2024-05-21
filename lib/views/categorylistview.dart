@@ -36,7 +36,7 @@ class _CategoryListViewState extends State<CategoryListView> {
                   leading: Icon(Icons.category),
                   title: Text(categoryData['categoria']),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
                       _showDeleteConfirmationDialog(context, category.id);
                     },
