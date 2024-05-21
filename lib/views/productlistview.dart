@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tienda3_admin/model/product.dart'; // Asegúrate de importar tu servicio de producto
+import 'package:tienda3_admin/views/edit_product.dart'; // Importa la página de edición de producto
 
 class ProductListView extends StatefulWidget {
   @override
@@ -9,6 +10,17 @@ class ProductListView extends StatefulWidget {
 
 class _ProductListViewState extends State<ProductListView> {
   final ProductService _productService = ProductService();
+  late Future<List<DocumentSnapshot>> _productListFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+  }
+
+  void _loadProducts() {
+    _productListFuture = _productService.getProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +29,7 @@ class _ProductListViewState extends State<ProductListView> {
         title: Text("Lista de productos"),
       ),
       body: FutureBuilder<List<DocumentSnapshot>>(
-        future: _productService.getProducts(),
+        future: _productListFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -40,12 +52,32 @@ class _ProductListViewState extends State<ProductListView> {
                       : Icon(Icons.image),
                   title: Text(productData['nombre']),
                   subtitle: Text(
-                      "Marca: ${productData['marca']}\nPrecio: ${productData['precio'] / 100}€\n Stock: ${productData['cantidad']} unidades"),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      _showDeleteConfirmationDialog(context, product.id);
-                    },
+                      "Marca: ${productData['marca']}\nPrecio: ${productData['precio'] / 100}€\nUnidades: ${productData['cantidad']}"),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EditProductPage(product: product)),
+                          ).then((_) {
+                            setState(() {
+                              _loadProducts();
+                            });
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          _showDeleteConfirmationDialog(context, product.id);
+                        },
+                      ),
+                    ],
                   ),
                 );
               },
@@ -72,7 +104,9 @@ class _ProductListViewState extends State<ProductListView> {
             onPressed: () {
               _productService.deleteProduct(productId).then((_) {
                 Navigator.of(context).pop();
-                setState(() {}); // Refrescar la lista de productos
+                setState(() {
+                  _loadProducts(); // Refrescar la lista de productos
+                });
               });
             },
           ),

@@ -20,4 +20,8 @@ class ProductService {
   Future<void> deleteProduct(String productId) {
     return _firestore.collection(ref).doc(productId).delete();
   }
+
+  Future<void> updateProduct(String productId, Map<String, dynamic> data) {
+    return _firestore.collection(ref).doc(productId).update(data);
+  }
 }
