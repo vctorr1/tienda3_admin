@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tienda3_admin/views/add_product.dart';
+import 'package:tienda3_admin/views/productlistview.dart';
 import '../model/category.dart';
 import '../model/brand.dart';
 import 'package:tienda3_admin/views/brandlistview.dart';
@@ -200,7 +201,10 @@ class _AdminState extends State<Admin> {
             ListTile(
               leading: Icon(Icons.change_history),
               title: Text("Lista de productos"),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ProductListView()));
+              },
             ),
             Divider(),
             ListTile(

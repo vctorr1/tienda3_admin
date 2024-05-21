@@ -11,4 +11,13 @@ class ProductService {
     data["id"] = productId;
     _firestore.collection(ref).doc(productId).set(data);
   }
+
+  Future<List<DocumentSnapshot>> getProducts() =>
+      _firestore.collection(ref).get().then((snaps) {
+        return snaps.docs;
+      });
+
+  Future<void> deleteProduct(String productId) {
+    return _firestore.collection(ref).doc(productId).delete();
+  }
 }
