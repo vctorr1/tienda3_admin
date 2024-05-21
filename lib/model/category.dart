@@ -24,4 +24,8 @@ class CategoryService {
           .then((snap) {
         return snap.docs;
       });
+
+  Future<void> deleteCategory(String categoryId) {
+    return _firestore.collection(ref).doc(categoryId).delete();
+  }
 }

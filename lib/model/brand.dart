@@ -15,7 +15,6 @@ class BrandService {
 
   Future<List<DocumentSnapshot>> getBrands() =>
       _firestore.collection(ref).get().then((snaps) {
-        print(snaps.docs.length);
         return snaps.docs;
       });
 
@@ -26,4 +25,8 @@ class BrandService {
           .then((snap) {
         return snap.docs;
       });
+
+  Future<void> deleteBrand(String brandId) {
+    return _firestore.collection(ref).doc(brandId).delete();
+  }
 }

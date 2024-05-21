@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
-import 'package:tienda3_admin/screens/add_product.dart';
-import '../db/category.dart';
-import '../db/brand.dart';
+import 'package:tienda3_admin/views/add_product.dart';
+import '../model/category.dart';
+import '../model/brand.dart';
+import 'package:tienda3_admin/views/brandlistview.dart';
+import 'package:tienda3_admin/views/categorylistview.dart';
 
 enum Page { dashboard, manage }
 
@@ -212,7 +214,12 @@ class _AdminState extends State<Admin> {
             ListTile(
               leading: Icon(Icons.category),
               title: Text("Lista de categorias"),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CategoryListView()));
+              },
             ),
             Divider(),
             ListTile(
@@ -227,7 +234,8 @@ class _AdminState extends State<Admin> {
               leading: Icon(Icons.library_books),
               title: Text("Lista de marcas"),
               onTap: () {
-                _brandService.getBrands();
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BrandListView()));
               },
             ),
             Divider(),

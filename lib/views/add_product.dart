@@ -6,9 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
-import 'package:tienda3_admin/db/product.dart';
-import '../db/category.dart';
-import '../db/brand.dart';
+import 'package:tienda3_admin/model/product.dart';
+import '../model/category.dart';
+import '../model/brand.dart';
 
 class AddProduct extends StatefulWidget {
   @override
