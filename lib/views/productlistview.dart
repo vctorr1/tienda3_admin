@@ -72,7 +72,10 @@ class _ProductListViewState extends State<ProductListView> {
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete),
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
                         onPressed: () {
                           _showDeleteConfirmationDialog(context, product.id);
                         },
