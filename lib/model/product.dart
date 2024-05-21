@@ -24,4 +24,9 @@ class ProductService {
   Future<void> updateProduct(String productId, Map<String, dynamic> data) {
     return _firestore.collection(ref).doc(productId).update(data);
   }
+
+  Future<int> getProductCount() async {
+    QuerySnapshot snapshot = await _firestore.collection(ref).get();
+    return snapshot.docs.length;
+  }
 }

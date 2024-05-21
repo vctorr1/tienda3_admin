@@ -28,4 +28,9 @@ class CategoryService {
   Future<void> deleteCategory(String categoryId) {
     return _firestore.collection(ref).doc(categoryId).delete();
   }
+
+  Future<int> getCategoryCount() async {
+    QuerySnapshot snapshot = await _firestore.collection(ref).get();
+    return snapshot.docs.length;
+  }
 }

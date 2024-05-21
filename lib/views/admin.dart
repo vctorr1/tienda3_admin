@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-//import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tienda3_admin/views/add_product.dart';
 import 'package:tienda3_admin/views/productlistview.dart';
 import '../model/category.dart';
 import '../model/brand.dart';
 import 'package:tienda3_admin/views/brandlistview.dart';
 import 'package:tienda3_admin/views/categorylistview.dart';
+import '../model/user.dart';
+import '../model/order.dart';
+import '../model/product.dart';
 
 enum Page { dashboard, manage }
 
@@ -24,6 +27,9 @@ class _AdminState extends State<Admin> {
   GlobalKey<FormState> _brandFormKey = GlobalKey();
   BrandService _brandService = BrandService();
   CategoryService _categoryService = CategoryService();
+  ProductService _productService = ProductService();
+  UserService _userService = UserService();
+  OrderService _orderService = OrderService();
 
   @override
   Widget build(BuildContext context) {
@@ -65,127 +71,63 @@ class _AdminState extends State<Admin> {
   Widget _loadScreen() {
     switch (_selectedPage) {
       case Page.dashboard:
-        return Column(
-          children: <Widget>[
-            ListTile(
-              subtitle: TextButton.icon(
-                onPressed: null,
-                icon: Icon(
-                  Icons.attach_money,
-                  size: 30.0,
-                  color: Colors.green,
-                ),
-                label: Text('12,000',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 30.0, color: Colors.green)),
-              ),
-              title: Text(
-                'Recaudación',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24.0, color: Colors.grey),
-              ),
-            ),
-            Expanded(
-              child: GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
+        return FutureBuilder(
+          future: _loadDashboardData(),
+          builder: (context, AsyncSnapshot<Map<String, int>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text("Error: ${snapshot.error}"));
+            } else if (!snapshot.hasData) {
+              return Center(child: Text("No se pudieron cargar los datos"));
+            } else {
+              var data = snapshot.data!;
+              return Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Card(
-                      child: ListTile(
-                          title: TextButton.icon(
-                              onPressed: null,
-                              icon: Icon(Icons.people_outline),
-                              label: Text("Usuarios")),
-                          subtitle: Text(
-                            '7',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
-                          )),
+                  ListTile(
+                    subtitle: TextButton.icon(
+                      onPressed: null,
+                      icon: Icon(
+                        Icons.work_outline,
+                        size: 30.0,
+                        color: Colors.green,
+                      ),
+                      label: Text('12,000€',
+                          textAlign: TextAlign.center,
+                          style:
+                              TextStyle(fontSize: 30.0, color: Colors.green)),
+                    ),
+                    title: Text(
+                      'Recaudación',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 24.0, color: Colors.grey),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Card(
-                      child: ListTile(
-                          title: TextButton.icon(
-                              onPressed: null,
-                              icon: Icon(Icons.category),
-                              label: Text("Categorias")),
-                          subtitle: Text(
-                            '23',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
-                          )),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(22.0),
-                    child: Card(
-                      child: ListTile(
-                          title: TextButton.icon(
-                              onPressed: null,
-                              icon: Icon(Icons.track_changes),
-                              label: Text("Productos")),
-                          subtitle: Text(
-                            '120',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
-                          )),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(22.0),
-                    child: Card(
-                      child: ListTile(
-                          title: TextButton.icon(
-                              onPressed: null,
-                              icon: Icon(Icons.tag_faces),
-                              label: Text("Ventas")),
-                          subtitle: Text(
-                            '13',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
-                          )),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(22.0),
-                    child: Card(
-                      child: ListTile(
-                          title: TextButton.icon(
-                              onPressed: null,
-                              icon: Icon(Icons.shopping_cart),
-                              label: Text("Pedidos")),
-                          subtitle: Text(
-                            '5',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
-                          )),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(22.0),
-                    child: Card(
-                      child: ListTile(
-                          title: TextButton.icon(
-                              onPressed: null,
-                              icon: Icon(Icons.close),
-                              label: Text("Devoluciones")),
-                          subtitle: Text(
-                            '0',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
-                          )),
+                  Expanded(
+                    child: GridView(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2),
+                      children: <Widget>[
+                        _buildDashboardCard("Usuarios", Icons.people_outline,
+                            data['usuarios']!),
+                        _buildDashboardCard(
+                            "Categorias", Icons.category, data['categorias']!),
+                        _buildDashboardCard("Productos", Icons.track_changes,
+                            data['productos']!),
+                        _buildDashboardCard(
+                            "Ventas", Icons.tag_faces, data['ventas']!),
+                        _buildDashboardCard(
+                            "Pedidos", Icons.shopping_cart, data['pedidos']!),
+                        _buildDashboardCard(
+                            "Devoluciones", Icons.close, data['devoluciones']!),
+                      ],
                     ),
                   ),
                 ],
-              ),
-            ),
-          ],
+              );
+            }
+          },
         );
-        break;
       case Page.manage:
         return ListView(
           children: <Widget>[
@@ -245,10 +187,47 @@ class _AdminState extends State<Admin> {
             Divider(),
           ],
         );
-        break;
       default:
         return Container();
     }
+  }
+
+  Widget _buildDashboardCard(String title, IconData icon, int count) {
+    return Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: Card(
+        color: Color.fromARGB(255, 208, 235, 255),
+        child: ListTile(
+          title: TextButton.icon(
+              onPressed: null, icon: Icon(icon), label: Text(title)),
+          subtitle: Text(
+            '$count',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: active, fontSize: 60.0),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<Map<String, int>> _loadDashboardData() async {
+    int usuarios = await _userService.getUserCount();
+    int categorias = await _categoryService.getCategoryCount();
+    int productos = await _productService.getProductCount();
+    int ventas =
+        0; //Ejemplo, por hacer una vez sea decidido el sistema de compra
+    int pedidos = await _orderService.getOrderCount();
+    int devoluciones =
+        0; //Ejemplo, por hacer una vez sea decidido el sistema de compra
+
+    return {
+      'usuarios': usuarios,
+      'categorias': categorias,
+      'productos': productos,
+      'ventas': ventas,
+      'pedidos': pedidos,
+      'devoluciones': devoluciones
+    };
   }
 
   void _categoryAlert() {
@@ -268,7 +247,7 @@ class _AdminState extends State<Admin> {
       actions: <Widget>[
         TextButton(
             onPressed: () {
-              if (categoryController.text != null) {
+              if (categoryController.text.isNotEmpty) {
                 _categoryService.createCategory(categoryController.text);
               }
 //          Fluttertoast.showToast(msg: 'category created');
@@ -294,7 +273,7 @@ class _AdminState extends State<Admin> {
           controller: brandController,
           validator: (value) {
             if (value!.isEmpty) {
-              return 'La categoría no puede estar vacía';
+              return 'La marca no puede estar vacía';
             }
           },
           decoration: InputDecoration(hintText: "Añadir marca"),
@@ -303,7 +282,7 @@ class _AdminState extends State<Admin> {
       actions: <Widget>[
         TextButton(
             onPressed: () {
-              if (brandController.text != null) {
+              if (brandController.text.isNotEmpty) {
                 _brandService.createBrand(brandController.text);
               }
 //          Fluttertoast.showToast(msg: 'brand added');
