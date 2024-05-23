@@ -22,6 +22,26 @@ class _OrderListViewState extends State<OrderListView> {
     _orderListFuture = _orderService.getOrders();
   }
 
+  // Método para abrir la página de edición de pedidos
+  void _openEditOrderPage(Order order) async {
+    final shouldRefreshList = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditOrderPage(
+          order: order,
+          // Pasa una función de retorno de datos que actualice la lista de pedidos
+          onOrderUpdated: (bool updated) {
+            if (updated) {
+              setState(() {
+                _loadOrders(); // Actualiza la lista de pedidos
+              });
+            }
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,13 +101,8 @@ class _OrderListViewState extends State<OrderListView> {
                             IconButton(
                               icon: Icon(Icons.edit),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        EditOrderPage(order: order),
-                                  ),
-                                );
+                                _openEditOrderPage(
+                                    order); // Llama al método para abrir la página de edición
                               },
                             ),
                             IconButton(

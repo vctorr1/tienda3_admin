@@ -4,8 +4,9 @@ import '../model/order_model.dart';
 
 class EditOrderPage extends StatefulWidget {
   final Order order;
+  final Function(bool) onOrderUpdated; // Función de retorno de datos
 
-  EditOrderPage({required this.order});
+  EditOrderPage({required this.order, required this.onOrderUpdated});
 
   @override
   _EditOrderPageState createState() => _EditOrderPageState();
@@ -35,6 +36,8 @@ class _EditOrderPageState extends State<EditOrderPage> {
 
   void _saveOrder() {
     _orderService.updateOrder(_editedOrder).then((_) {
+      // Llama a la función de retorno de datos y pasa true para indicar que se actualizó el pedido
+      widget.onOrderUpdated(true);
       Navigator.of(context).pop();
     });
   }

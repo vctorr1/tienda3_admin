@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tienda3_admin/views/add_product.dart';
 import 'package:tienda3_admin/views/productlistview.dart';
 import '../model/category.dart';
@@ -7,7 +6,6 @@ import '../model/brand.dart';
 import 'package:tienda3_admin/views/brandlistview.dart';
 import 'package:tienda3_admin/views/categorylistview.dart';
 import '../model/user.dart';
-import '../model/order_model.dart' as local; // Importa el modelo con prefijo
 import '../model/order.dart';
 import 'package:tienda3_admin/views/orderlistview.dart';
 import 'package:tienda3_admin/model/product.dart';
@@ -50,7 +48,7 @@ class _AdminState extends State<Admin> {
                             ? active
                             : notActive,
                       ),
-                      label: Text('Información'))),
+                      label: const Text('Información'))),
               Expanded(
                   child: TextButton.icon(
                       onPressed: () {
@@ -61,7 +59,7 @@ class _AdminState extends State<Admin> {
                         color:
                             _selectedPage == Page.manage ? active : notActive,
                       ),
-                      label: Text('Administrar'))),
+                      label: const Text('Administrar'))),
             ],
           ),
           elevation: 0.0,
@@ -77,11 +75,12 @@ class _AdminState extends State<Admin> {
           future: _loadDashboardData(),
           builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text("Error: ${snapshot.error}"));
             } else if (!snapshot.hasData) {
-              return Center(child: Text("No se pudieron cargar los datos"));
+              return const Center(
+                  child: Text("No se pudieron cargar los datos"));
             } else {
               var data = snapshot.data!;
               return Column(
@@ -89,17 +88,17 @@ class _AdminState extends State<Admin> {
                   ListTile(
                     subtitle: TextButton.icon(
                       onPressed: null,
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.attach_money,
                         size: 30.0,
                         color: Colors.green,
                       ),
                       label: Text('${data['revenue']}€',
                           textAlign: TextAlign.center,
-                          style:
-                              TextStyle(fontSize: 30.0, color: Colors.green)),
+                          style: const TextStyle(
+                              fontSize: 30.0, color: Colors.green)),
                     ),
-                    title: Text(
+                    title: const Text(
                       'Recaudación',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 24.0, color: Colors.grey),
@@ -107,8 +106,9 @@ class _AdminState extends State<Admin> {
                   ),
                   Expanded(
                     child: GridView(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2),
                       children: <Widget>[
                         _buildDashboardCard("Usuarios", Icons.people_outline,
                             data['usuarios'] ?? 0),
@@ -134,34 +134,34 @@ class _AdminState extends State<Admin> {
         return ListView(
           children: <Widget>[
             ListTile(
-              leading: Icon(Icons.add),
-              title: Text("Añadir producto"),
+              leading: const Icon(Icons.add),
+              title: const Text("Añadir producto"),
               onTap: () {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (_) => AddProduct()));
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
-              leading: Icon(Icons.change_history),
-              title: Text("Lista de productos"),
+              leading: const Icon(Icons.change_history),
+              title: const Text("Lista de productos"),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ProductListView()));
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
-              leading: Icon(Icons.add_circle),
-              title: Text("Añadir categoria"),
+              leading: const Icon(Icons.add_circle),
+              title: const Text("Añadir categoria"),
               onTap: () {
                 _categoryAlert();
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
-              leading: Icon(Icons.category),
-              title: Text("Lista de categorias"),
+              leading: const Icon(Icons.category),
+              title: const Text("Lista de categorias"),
               onTap: () {
                 Navigator.push(
                     context,
@@ -169,27 +169,27 @@ class _AdminState extends State<Admin> {
                         builder: (context) => CategoryListView()));
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
-              leading: Icon(Icons.add_circle_outline),
-              title: Text("Añadir marca"),
+              leading: const Icon(Icons.add_circle_outline),
+              title: const Text("Añadir marca"),
               onTap: () {
                 _brandAlert();
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
-              leading: Icon(Icons.library_books),
-              title: Text("Lista de marcas"),
+              leading: const Icon(Icons.library_books),
+              title: const Text("Lista de marcas"),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => BrandListView()));
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
-              leading: Icon(Icons.shopping_cart),
-              title: Text("Lista de pedidos"),
+              leading: const Icon(Icons.shopping_cart),
+              title: const Text("Lista de pedidos"),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => OrderListView()));
@@ -203,14 +203,13 @@ class _AdminState extends State<Admin> {
   }
 
   Future<Map<String, dynamic>> _loadDashboardData() async {
-    int usuarios = (await _userService.getUserCount()) ?? 0;
-    int categorias = (await _categoryService.getCategoryCount()) ?? 0;
-    int productos = (await _productService.getProductCount()) ?? 0;
+    int usuarios = (await _userService.getUserCount());
+    int categorias = (await _categoryService.getCategoryCount());
+    int productos = (await _productService.getProductCount());
     int ventas = await _orderService.getCompletedOrderCount();
     double revenue = await _orderService.getTotalRevenue();
-    int pedidos = (await _orderService.getOrderCount()) ?? 0;
-    int devoluciones =
-        0; // Aquí puedes agregar lógica para contar las devoluciones
+    int pedidos = (await _orderService.getOrderCount());
+    int devoluciones = 0; //A rellenar más adelante
 
     return {
       'usuarios': usuarios,
@@ -233,24 +232,23 @@ class _AdminState extends State<Admin> {
             if (value!.isEmpty) {
               return 'La categoría no puede estar vacía';
             }
+            return null;
           },
-          decoration: InputDecoration(hintText: "Añadir categoria"),
+          decoration: const InputDecoration(hintText: "Añadir categoria"),
         ),
       ),
       actions: <Widget>[
         TextButton(
             onPressed: () {
-              if (categoryController.text != null) {
-                _categoryService.createCategory(categoryController.text);
-              }
+              _categoryService.createCategory(categoryController.text);
               Navigator.pop(context);
             },
-            child: Text('AÑADIR')),
+            child: const Text('Añadir')),
         TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('CANCELAR')),
+            child: const Text('Cancelar')),
       ],
     );
 
@@ -267,24 +265,23 @@ class _AdminState extends State<Admin> {
             if (value!.isEmpty) {
               return 'La marca no puede estar vacía';
             }
+            return null;
           },
-          decoration: InputDecoration(hintText: "Añadir marca"),
+          decoration: const InputDecoration(hintText: "Añadir marca"),
         ),
       ),
       actions: <Widget>[
         TextButton(
             onPressed: () {
-              if (brandController.text != null) {
-                _brandService.createBrand(brandController.text);
-              }
+              _brandService.createBrand(brandController.text);
               Navigator.pop(context);
             },
-            child: Text('AÑADIR')),
+            child: const Text('Añadir')),
         TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('CANCELAR')),
+            child: const Text('Cancelar')),
       ],
     );
 
