@@ -42,33 +42,52 @@ class _OrderListViewState extends State<OrderListView> {
               itemCount: orders.length,
               itemBuilder: (context, index) {
                 final order = orders[index];
-                return ListTile(
-                  leading: Icon(Icons.shopping_cart),
-                  title: Text('ID Pedido: ${order.id}'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('ID Cliente: ${order.customerId}'),
-                      Text('Productos: ${order.items.join(', ')}'),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          // Navega a la página de edición del pedido si es necesario
-                          // Navigator.push(context, MaterialPageRoute(builder: (context) => EditOrderPage(order: order)));
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          _showDeleteConfirmationDialog(context, order.id);
-                        },
-                      ),
-                    ],
+                return Card(
+                  margin: EdgeInsets.all(8),
+                  child: ListTile(
+                    leading: Icon(Icons.shopping_cart),
+                    title: Text('ID Pedido: ${order.id}'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('ID Cliente: ${order.customerId}'),
+                        Text('Productos:'),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: order.items.map((item) {
+                            return ListTile(
+                              title: Text('ID Producto: ${item['id']}'),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Nombre: ${item['nombre']}'),
+                                  Text('Precio: ${item['precio']}'),
+                                  Text('Cantidad: ${item['cantidad']}'),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            // Navega a la página de edición del pedido si es necesario
+                            // Navigator.push(context, MaterialPageRoute(builder: (context) => EditOrderPage(order: order)));
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(context, order.id);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
