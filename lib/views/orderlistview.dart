@@ -56,7 +56,7 @@ class _OrderListViewState extends State<OrderListView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: order.items.map((item) {
                             return ListTile(
-                              title: Text('ID Producto: ${item['id']}'),
+                              title: Text('ID Producto: ${item['productId']}'),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
