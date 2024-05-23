@@ -48,8 +48,8 @@ class _OrderListViewState extends State<OrderListView> {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Cliente ID: ${order.customerId}'),
-                      Text('Items: ${order.items.join(', ')}'),
+                      Text('ID Cliente: ${order.customerId}'),
+                      Text('Productos: ${order.items.join(', ')}'),
                     ],
                   ),
                   trailing: Row(
