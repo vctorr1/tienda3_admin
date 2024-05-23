@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../model/order_model.dart';
 import '../model/order.dart';
+import 'editorderpage.dart'; // Asegúrate de tener esta importación
 
 class OrderListView extends StatefulWidget {
   @override
@@ -42,17 +43,22 @@ class _OrderListViewState extends State<OrderListView> {
               itemCount: orders.length,
               itemBuilder: (context, index) {
                 final order = orders[index];
+                double totalPrice = 0;
+                order.items.forEach((item) {
+                  totalPrice += (item['precio'] ?? 0) / 100;
+                });
                 return Card(
                   margin: EdgeInsets.all(8),
-                  child: ListTile(
+                  child: ExpansionTile(
                     leading: Icon(Icons.shopping_cart),
                     title: Text('ID Pedido: ${order.id}'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('ID Cliente: ${order.customerId}'),
-                        Text('Productos:'),
-                        Column(
+                    children: [
+                      ListTile(
+                        title: Text(
+                          'ID Cliente: ${order.customerId}',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: order.items.map((item) {
                             return ListTile(
@@ -61,33 +67,50 @@ class _OrderListViewState extends State<OrderListView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Nombre: ${item['nombre']}'),
-                                  Text('Precio: ${item['precio']}'),
-                                  Text('Cantidad: ${item['cantidad']}'),
+                                  Text(
+                                    'Precio: ${(item['precio'] ?? 0) / 100}€',
+                                  ),
                                 ],
                               ),
                             );
                           }).toList(),
                         ),
-                      ],
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            // Navega a la página de edición del pedido si es necesario
-                            // Navigator.push(context, MaterialPageRoute(builder: (context) => EditOrderPage(order: order)));
-                          },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditOrderPage(order: order),
+                                  ),
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                _showDeleteConfirmationDialog(
+                                    context, order.id);
+                              },
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            _showDeleteConfirmationDialog(context, order.id);
-                          },
+                      ),
+                      ListTile(
+                        title: Text(
+                          'Total: $totalPrice€',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.red,
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },
