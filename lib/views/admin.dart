@@ -7,8 +7,10 @@ import '../model/brand.dart';
 import 'package:tienda3_admin/views/brandlistview.dart';
 import 'package:tienda3_admin/views/categorylistview.dart';
 import '../model/user.dart';
+import '../model/order_model.dart' as local; // Importa el modelo con prefijo
 import '../model/order.dart';
-import '../model/product.dart';
+import 'package:tienda3_admin/views/orderlistview.dart';
+import 'package:tienda3_admin/model/product.dart';
 
 enum Page { dashboard, manage }
 
@@ -88,11 +90,11 @@ class _AdminState extends State<Admin> {
                     subtitle: TextButton.icon(
                       onPressed: null,
                       icon: Icon(
-                        Icons.work_outline,
+                        Icons.attach_money,
                         size: 30.0,
                         color: Colors.green,
                       ),
-                      label: Text('12,000€',
+                      label: Text('12,000',
                           textAlign: TextAlign.center,
                           style:
                               TextStyle(fontSize: 30.0, color: Colors.green)),
@@ -109,17 +111,17 @@ class _AdminState extends State<Admin> {
                           crossAxisCount: 2),
                       children: <Widget>[
                         _buildDashboardCard("Usuarios", Icons.people_outline,
-                            data['usuarios']!),
-                        _buildDashboardCard(
-                            "Categorias", Icons.category, data['categorias']!),
+                            data['usuarios'] ?? 0),
+                        _buildDashboardCard("Categorias", Icons.category,
+                            data['categorias'] ?? 0),
                         _buildDashboardCard("Productos", Icons.track_changes,
-                            data['productos']!),
+                            data['productos'] ?? 0),
                         _buildDashboardCard(
-                            "Ventas", Icons.tag_faces, data['ventas']!),
-                        _buildDashboardCard(
-                            "Pedidos", Icons.shopping_cart, data['pedidos']!),
-                        _buildDashboardCard(
-                            "Devoluciones", Icons.close, data['devoluciones']!),
+                            "Ventas", Icons.tag_faces, data['ventas'] ?? 0),
+                        _buildDashboardCard("Pedidos", Icons.shopping_cart,
+                            data['pedidos'] ?? 0),
+                        _buildDashboardCard("Devoluciones", Icons.close,
+                            data['devoluciones'] ?? 0),
                       ],
                     ),
                   ),
@@ -185,6 +187,14 @@ class _AdminState extends State<Admin> {
               },
             ),
             Divider(),
+            ListTile(
+              leading: Icon(Icons.shopping_cart),
+              title: Text("Lista de pedidos"),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => OrderListView()));
+              },
+            ),
           ],
         );
       default:
@@ -192,33 +202,14 @@ class _AdminState extends State<Admin> {
     }
   }
 
-  Widget _buildDashboardCard(String title, IconData icon, int count) {
-    return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: Card(
-        color: Color.fromARGB(255, 208, 235, 255),
-        child: ListTile(
-          title: TextButton.icon(
-              onPressed: null, icon: Icon(icon), label: Text(title)),
-          subtitle: Text(
-            '$count',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: active, fontSize: 60.0),
-          ),
-        ),
-      ),
-    );
-  }
-
   Future<Map<String, int>> _loadDashboardData() async {
-    int usuarios = await _userService.getUserCount();
-    int categorias = await _categoryService.getCategoryCount();
-    int productos = await _productService.getProductCount();
-    int ventas =
-        0; //Ejemplo, por hacer una vez sea decidido el sistema de compra
-    int pedidos = await _orderService.getOrderCount();
+    int usuarios = (await _userService.getUserCount()) ?? 0;
+    int categorias = (await _categoryService.getCategoryCount()) ?? 0;
+    int productos = (await _productService.getProductCount()) ?? 0;
+    int ventas = 13; // Aquí puedes agregar lógica para contar las ventas
+    int pedidos = (await _orderService.getOrderCount()) ?? 0;
     int devoluciones =
-        0; //Ejemplo, por hacer una vez sea decidido el sistema de compra
+        0; // Aquí puedes agregar lógica para contar las devoluciones
 
     return {
       'usuarios': usuarios,
@@ -247,7 +238,7 @@ class _AdminState extends State<Admin> {
       actions: <Widget>[
         TextButton(
             onPressed: () {
-              if (categoryController.text.isNotEmpty) {
+              if (categoryController.text != null) {
                 _categoryService.createCategory(categoryController.text);
               }
 //          Fluttertoast.showToast(msg: 'category created');
@@ -273,7 +264,7 @@ class _AdminState extends State<Admin> {
           controller: brandController,
           validator: (value) {
             if (value!.isEmpty) {
-              return 'La marca no puede estar vacía';
+              return 'La categoría no puede estar vacía';
             }
           },
           decoration: InputDecoration(hintText: "Añadir marca"),
@@ -282,7 +273,7 @@ class _AdminState extends State<Admin> {
       actions: <Widget>[
         TextButton(
             onPressed: () {
-              if (brandController.text.isNotEmpty) {
+              if (brandController.text != null) {
                 _brandService.createBrand(brandController.text);
               }
 //          Fluttertoast.showToast(msg: 'brand added');
@@ -298,5 +289,25 @@ class _AdminState extends State<Admin> {
     );
 
     showDialog(context: context, builder: (_) => alert);
+  }
+
+  Widget _buildDashboardCard(String title, IconData icon, int count) {
+    return Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: Card(
+        child: ListTile(
+          title: TextButton.icon(
+            onPressed: null,
+            icon: Icon(icon),
+            label: Text(title),
+          ),
+          subtitle: Text(
+            '$count',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: active, fontSize: 60.0),
+          ),
+        ),
+      ),
+    );
   }
 }
