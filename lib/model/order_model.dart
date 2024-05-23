@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Order {
-  final String id;
-  final String customerId;
-  final List<Map<String, dynamic>>
-      items; // Lista de mapas con detalles del producto
+  String id;
+  String customerId;
+  List<dynamic> items;
   String status;
 
   Order({
@@ -15,12 +14,12 @@ class Order {
   });
 
   factory Order.fromDocumentSnapshot(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Order(
       id: doc.id,
-      customerId: data['userId'],
-      items: List<Map<String, dynamic>>.from(data['carrito']),
-      status: data['status'],
+      customerId: data['userId'] ?? '',
+      items: data['carrito'] ?? [],
+      status: data['status'] ?? '',
     );
   }
 }

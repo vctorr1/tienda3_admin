@@ -39,4 +39,27 @@ class OrderService {
     order.status = newStatus;
     return order;
   }
+
+  Future<int> getCompletedOrderCount() async {
+    QuerySnapshot snapshot = await _firestore
+        .collection(ref)
+        .where('status', isEqualTo: 'Completado')
+        .get();
+    return snapshot.docs.length;
+  }
+
+  Future<double> getTotalRevenue() async {
+    QuerySnapshot snapshot = await _firestore
+        .collection(ref)
+        .where('status', isEqualTo: 'Completado')
+        .get();
+    double totalRevenue = 0;
+    for (var doc in snapshot.docs) {
+      order_model.Order order = order_model.Order.fromDocumentSnapshot(doc);
+      double orderTotal =
+          order.items.fold(0, (sum, item) => sum + (item['precio'] ?? 0) / 100);
+      totalRevenue += orderTotal;
+    }
+    return totalRevenue;
+  }
 }

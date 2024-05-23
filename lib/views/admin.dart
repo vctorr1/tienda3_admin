@@ -75,7 +75,7 @@ class _AdminState extends State<Admin> {
       case Page.dashboard:
         return FutureBuilder(
           future: _loadDashboardData(),
-          builder: (context, AsyncSnapshot<Map<String, int>> snapshot) {
+          builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
@@ -94,7 +94,7 @@ class _AdminState extends State<Admin> {
                         size: 30.0,
                         color: Colors.green,
                       ),
-                      label: Text('12,000',
+                      label: Text('${data['revenue']}€',
                           textAlign: TextAlign.center,
                           style:
                               TextStyle(fontSize: 30.0, color: Colors.green)),
@@ -202,11 +202,12 @@ class _AdminState extends State<Admin> {
     }
   }
 
-  Future<Map<String, int>> _loadDashboardData() async {
+  Future<Map<String, dynamic>> _loadDashboardData() async {
     int usuarios = (await _userService.getUserCount()) ?? 0;
     int categorias = (await _categoryService.getCategoryCount()) ?? 0;
     int productos = (await _productService.getProductCount()) ?? 0;
-    int ventas = 13; // Aquí puedes agregar lógica para contar las ventas
+    int ventas = await _orderService.getCompletedOrderCount();
+    double revenue = await _orderService.getTotalRevenue();
     int pedidos = (await _orderService.getOrderCount()) ?? 0;
     int devoluciones =
         0; // Aquí puedes agregar lógica para contar las devoluciones
@@ -216,6 +217,7 @@ class _AdminState extends State<Admin> {
       'categorias': categorias,
       'productos': productos,
       'ventas': ventas,
+      'revenue': revenue,
       'pedidos': pedidos,
       'devoluciones': devoluciones
     };
@@ -241,7 +243,6 @@ class _AdminState extends State<Admin> {
               if (categoryController.text != null) {
                 _categoryService.createCategory(categoryController.text);
               }
-//          Fluttertoast.showToast(msg: 'category created');
               Navigator.pop(context);
             },
             child: Text('AÑADIR')),
@@ -264,7 +265,7 @@ class _AdminState extends State<Admin> {
           controller: brandController,
           validator: (value) {
             if (value!.isEmpty) {
-              return 'La categoría no puede estar vacía';
+              return 'La marca no puede estar vacía';
             }
           },
           decoration: InputDecoration(hintText: "Añadir marca"),
@@ -276,7 +277,6 @@ class _AdminState extends State<Admin> {
               if (brandController.text != null) {
                 _brandService.createBrand(brandController.text);
               }
-//          Fluttertoast.showToast(msg: 'brand added');
               Navigator.pop(context);
             },
             child: Text('AÑADIR')),
