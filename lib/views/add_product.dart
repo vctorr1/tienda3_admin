@@ -1,11 +1,8 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as path;
 import 'package:tienda3_admin/model/product.dart';
 import '../model/category.dart';
 import '../model/brand.dart';
@@ -64,7 +61,7 @@ class _AddProductState extends State<AddProduct> {
   List<DropdownMenuItem<String>> getCategoriesDropdown() {
     return categories.map((category) {
       final categoryValue = category['categoria']?.toString() ??
-          'Unknown'; // Asegúrate de que el valor es String y maneja nulos
+          'Desconocido'; // Asegúrate de que el valor es String y maneja nulos
       return DropdownMenuItem<String>(
         child: Text(categoryValue),
         value: categoryValue,
@@ -75,7 +72,7 @@ class _AddProductState extends State<AddProduct> {
   List<DropdownMenuItem<String>> getBrandsDropdown() {
     return brands.map((brand) {
       final brandValue = brand['marca']?.toString() ??
-          'Unknown'; // Convierte a String y maneja valores nulos
+          'Desconocido'; // Convierte a String y maneja valores nulos
       return DropdownMenuItem<String>(
         child: Text(brandValue),
         value: brandValue,
@@ -316,7 +313,7 @@ class _AddProductState extends State<AddProduct> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        'Enter a product name with 10 characters at maximum',
+                        'Escoge un nombre con menos de 10 caracteres',
                         textAlign: TextAlign.center,
                         style: TextStyle(color: red, fontSize: 12),
                       ),
@@ -329,9 +326,9 @@ class _AddProductState extends State<AddProduct> {
                             InputDecoration(hintText: 'Nombre del producto'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'You must enter the product name';
+                            return 'Introduce el nombre';
                           } else if (value.length > 10) {
-                            return 'Product name can\'t have more than 10 characters';
+                            return 'El nombre no puede tener mas de 10 caracteres';
                           }
                           return null;
                         },

@@ -23,13 +23,13 @@ class _AdminState extends State<Admin> {
   MaterialColor notActive = Colors.grey;
   TextEditingController categoryController = TextEditingController();
   TextEditingController brandController = TextEditingController();
-  GlobalKey<FormState> _categoryFormKey = GlobalKey();
-  GlobalKey<FormState> _brandFormKey = GlobalKey();
-  BrandService _brandService = BrandService();
-  CategoryService _categoryService = CategoryService();
-  ProductService _productService = ProductService();
-  UserService _userService = UserService();
-  OrderService _orderService = OrderService();
+  final GlobalKey<FormState> _categoryFormKey = GlobalKey();
+  final GlobalKey<FormState> _brandFormKey = GlobalKey();
+  final BrandService _brandService = BrandService();
+  final CategoryService _categoryService = CategoryService();
+  final ProductService _productService = ProductService();
+  final UserService _userService = UserService();
+  final OrderService _orderService = OrderService();
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +89,7 @@ class _AdminState extends State<Admin> {
                     subtitle: TextButton.icon(
                       onPressed: null,
                       icon: const Icon(
-                        Icons.attach_money,
+                        Icons.arrow_circle_up_rounded,
                         size: 30.0,
                         color: Colors.green,
                       ),
@@ -110,7 +110,7 @@ class _AdminState extends State<Admin> {
                           const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2),
                       children: <Widget>[
-                        _buildDashboardCard("Usuarios", Icons.people_outline,
+                        _buildDashboardCard("Clientes", (Icons.people_outline),
                             data['usuarios'] ?? 0),
                         _buildDashboardCard("Categorias", Icons.category,
                             data['categorias'] ?? 0),
