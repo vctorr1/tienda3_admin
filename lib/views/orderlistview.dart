@@ -110,6 +110,16 @@ class _OrderListViewState extends State<OrderListView> {
                           ),
                         ),
                       ),
+                      ListTile(
+                        title: Text(
+                          'Estado: ${order.status}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 );
