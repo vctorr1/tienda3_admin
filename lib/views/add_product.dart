@@ -313,7 +313,7 @@ class _AddProductState extends State<AddProduct> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        'Escoge un nombre con menos de 10 caracteres',
+                        'Escoge un nombre con menos de 30 caracteres',
                         textAlign: TextAlign.center,
                         style: TextStyle(color: red, fontSize: 12),
                       ),
@@ -327,8 +327,8 @@ class _AddProductState extends State<AddProduct> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Introduce el nombre';
-                          } else if (value.length > 10) {
-                            return 'El nombre no puede tener mas de 10 caracteres';
+                          } else if (value.length > 30) {
+                            return 'El nombre no puede tener mas de 30 caracteres';
                           }
                           return null;
                         },
