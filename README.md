@@ -4,7 +4,6 @@ Panel de administración privado
 
 ## Información
 
-Realizaado con Dart/Flutter
-Pendiente de finalizar
+Realizado con Dart/Flutter
 
 Realizado por Victor Ríos
